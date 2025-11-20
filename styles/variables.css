@@ -19,6 +19,7 @@
   --color-hover-5: #383e44;
   --border-1: #e9ecef;
   --task-color: #000000;
+  --badge-color: #ffffff;
 }
 
 :root[data-theme="dark"] {
@@ -42,4 +43,5 @@
   --color-hover-5: #383e44;
   --border-1: #2c2c2c;
   --task-color: #ffffff;
+  --badge-color: #000000;
 }

@@ -65,7 +65,7 @@ function crearElementoTarea(tarea) {
         <input type="checkbox" class="checkbox" ${
           tarea.completada ? "checked" : ""
         }>
-        <p class="texto-tarea"> <span class="cat-badge" style="color: ${color}; border: 1px solid ${color}">${
+        <p class="texto-tarea"> <span class="cat-badge" style="color: ${color}; border: 2px solid ${color}">${
     tarea.categoria
   }</span> ${tarea.texto}</p>
         <input type="text" class="editor" value="${
