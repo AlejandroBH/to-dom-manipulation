@@ -5,6 +5,7 @@ const btnLimpiar = document.getElementById("btn-limpiar-completadas");
 const listaTareas = document.getElementById("lista-tareas");
 const emptyState = document.querySelector(".empty-state");
 const filtroBtns = document.querySelectorAll(".filtro-btn");
+const categorySelect = document.getElementById("category");
 const stats = {
   total: document.getElementById("total-tareas"),
   completadas: document.getElementById("tareas-completadas"),
@@ -13,6 +14,24 @@ const stats = {
 
 let tareas = JSON.parse(localStorage.getItem("tareas")) || [];
 let filtroActual = "todas";
+
+// Lista de categorias
+const listaCategorias = [
+  { name: "Urgente", color: "#b60000ff" },
+  { name: "Trabajo", color: "#0012b3ff" },
+  { name: "Estudio", color: "#c07d00ff" },
+  { name: "Relacion", color: "#9b0081ff" },
+  { name: "Pasatiempo", color: "#00741dff" },
+];
+
+// Carga lista de categorias dinamicamente
+listaCategorias.forEach((cat) => {
+  const option = document.createElement("option");
+
+  option.textContent = cat.name;
+  option.setAttribute("value", cat.name.toLowerCase());
+  categorySelect.appendChild(option);
+});
 
 // Funciones de utilidad
 function guardarTareas() {
@@ -33,14 +52,21 @@ function actualizarEstadisticas() {
 
 function crearElementoTarea(tarea) {
   const div = document.createElement("div");
+  const indexCategoria = listaCategorias.findIndex(
+    (cat) => cat.name.toLowerCase() === tarea.categoria
+  );
   div.className = `tarea ${tarea.completada ? "completed" : ""}`;
   div.dataset.id = tarea.id;
+
+  const { color } = listaCategorias[indexCategoria];
 
   div.innerHTML = `
         <input type="checkbox" class="checkbox" ${
           tarea.completada ? "checked" : ""
         }>
-        <span class="texto-tarea">${tarea.texto}</span>
+        <p class="texto-tarea"> <span class="cat-badge" style="color: ${color}; border: 1px solid ${color}">${
+    tarea.categoria
+  }</span> ${tarea.texto}</p>
         <input type="text" class="editor" value="${
           tarea.texto
         }" maxlength="100">
@@ -150,12 +176,14 @@ function filtrarTareas() {
 btnAgregar.addEventListener("click", (e) => {
   e.preventDefault();
   const texto = inputTarea.value.trim();
+  const categoria = categorySelect.value;
 
-  if (texto) {
+  if ((texto, categoria)) {
     const nuevaTarea = {
       id: Date.now(),
       texto: texto,
       completada: false,
+      categoria: categoria,
       fechaCreacion: new Date().toISOString(),
     };
 
@@ -171,6 +199,8 @@ btnAgregar.addEventListener("click", (e) => {
       }
       listaTareas.appendChild(elementoTarea);
     }
+  } else {
+    alert("Error: debes ingresar una tarea y elegir una categoria");
   }
 });
 
