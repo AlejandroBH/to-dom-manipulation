@@ -144,8 +144,10 @@ function mostrarTareas() {
 
   // Filtra lista de tareas segun criterio de busqueda
   if (searchEngine.value !== "") {
-    tareasFiltradas = tareas.filter((t) =>
-      t.texto.includes(searchEngine.value)
+    tareasFiltradas = tareas.filter(
+      (t) =>
+        t.texto.includes(searchEngine.value) ||
+        t.categoria.includes(searchEngine.value)
     );
   }
 
