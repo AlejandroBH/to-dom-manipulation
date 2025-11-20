@@ -47,3 +47,13 @@ h1 {
   font-weight: bold;
   background: var(--badge-color);
 }
+
+.header-control {
+  position: relative;
+}
+
+#btn-theme {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
