@@ -5,6 +5,7 @@ const btnLimpiar = document.getElementById("btn-limpiar-completadas");
 const listaTareas = document.getElementById("lista-tareas");
 const emptyState = document.querySelector(".empty-state");
 const filtroBtns = document.querySelectorAll(".filtro-btn");
+const searchEngine = document.getElementById("searchEngine");
 const categorySelect = document.getElementById("category");
 const stats = {
   total: document.getElementById("total-tareas"),
@@ -141,12 +142,19 @@ function mostrarTareas() {
   listaTareas.innerHTML = "";
   let tareasFiltradas = tareas;
 
+  // Filtra lista de tareas segun criterio de busqueda
+  if (searchEngine.value !== "") {
+    tareasFiltradas = tareas.filter((t) =>
+      t.texto.includes(searchEngine.value)
+    );
+  }
+
   switch (filtroActual) {
     case "pendientes":
-      tareasFiltradas = tareas.filter((t) => !t.completada);
+      tareasFiltradas = tareasFiltradas.filter((t) => !t.completada);
       break;
     case "completadas":
-      tareasFiltradas = tareas.filter((t) => t.completada);
+      tareasFiltradas = tareasFiltradas.filter((t) => t.completada);
       break;
   }
 
@@ -171,6 +179,10 @@ function mostrarEmptyState() {
 function filtrarTareas() {
   mostrarTareas();
 }
+
+searchEngine.addEventListener("keyup", () => {
+  mostrarTareas();
+});
 
 // Event listeners principales
 btnAgregar.addEventListener("click", (e) => {

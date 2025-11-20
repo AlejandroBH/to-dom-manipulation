@@ -11,6 +11,7 @@
 }
 
 input[type="text"],
+input[type="search"],
 select {
   flex: 1;
   padding: 12px;
@@ -22,6 +23,7 @@ select {
 }
 
 input[type="text"]:focus,
+input[type="search"]:focus,
 select:focus {
   outline: none;
   border-color: var(--color-2);
