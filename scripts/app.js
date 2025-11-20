@@ -190,7 +190,7 @@ btnAgregar.addEventListener("click", (e) => {
   const texto = inputTarea.value.trim();
   const categoria = categorySelect.value;
 
-  if ((texto, categoria)) {
+  if ((texto, categoria) && texto !== "") {
     const nuevaTarea = {
       id: Date.now(),
       texto: texto,
