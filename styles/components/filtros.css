@@ -1,0 +1,26 @@
+.filtros {
+  padding: 15px 20px;
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border-1);
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.filtro-btn {
+  padding: 8px 16px;
+  background: var(--bg-3);
+  color: var(--color-1);
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.filtro-btn.active {
+  background: var(--color-2);
+}
+
+.filtro-btn:hover {
+  transform: translateY(-1px);
+}

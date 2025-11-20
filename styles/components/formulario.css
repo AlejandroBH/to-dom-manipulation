@@ -1,0 +1,26 @@
+.formulario-agregar {
+  padding: 20px;
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border-1);
+}
+
+.form-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid var(--border-1);
+  border-radius: 5px;
+  background: var(--bg-input);
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--color-2);
+}

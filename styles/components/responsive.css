@@ -1,0 +1,14 @@
+@media (max-width: 480px) {
+  .form-group {
+    flex-direction: column;
+  }
+
+  .filtros {
+    flex-wrap: wrap;
+  }
+
+  .stats {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+}
