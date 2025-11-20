@@ -1,3 +1,6 @@
+// Importaciones
+import listaCategorias from '../json/categorias.json' with { type: "json" };
+
 // Elementos del DOM
 const inputTarea = document.getElementById("input-tarea");
 const btnAgregar = document.getElementById("btn-agregar");
@@ -15,15 +18,6 @@ const stats = {
 
 let tareas = JSON.parse(localStorage.getItem("tareas")) || [];
 let filtroActual = "todas";
-
-// Lista de categorias
-const listaCategorias = [
-  { name: "Urgente", color: "#b60000ff" },
-  { name: "Trabajo", color: "#0012b3ff" },
-  { name: "Estudio", color: "#c07d00ff" },
-  { name: "Relacion", color: "#9b0081ff" },
-  { name: "Pasatiempo", color: "#00741dff" },
-];
 
 // Carga lista de categorias dinamicamente
 listaCategorias.forEach((cat) => {

@@ -1,0 +1,7 @@
+[
+  { "name": "Urgente", "color": "#b60000ff" },
+  { "name": "Trabajo", "color": "#0012b3ff" },
+  { "name": "Estudio", "color": "#c07d00ff" },
+  { "name": "Relacion", "color": "#9b0081ff" },
+  { "name": "Pasatiempo", "color": "#00741dff" }
+]
