@@ -1,5 +1,6 @@
 // Importaciones
 import listaCategorias from '../json/categorias.json' with { type: "json" };
+import { crearTareaTemplate } from './templates.js';
 
 // Elementos del DOM
 const inputTarea = document.getElementById("input-tarea");
@@ -54,71 +55,87 @@ function crearElementoTarea(tarea) {
   div.dataset.id = tarea.id;
 
   const { color } = listaCategorias[indexCategoria];
+  div.innerHTML = crearTareaTemplate(tarea, color);
+  return div;
+}
 
-  div.innerHTML = `
-        <input type="checkbox" class="checkbox" ${
-          tarea.completada ? "checked" : ""
-        }>
-        <p class="texto-tarea"> <span class="cat-badge" style="color: ${color}; border: 2px solid ${color}">${
-    tarea.categoria
-  }</span> ${tarea.texto}</p>
-        <input type="text" class="editor" value="${
-          tarea.texto
-        }" maxlength="100">
-        <div class="acciones">
-          <button class="btn btn-small btn-primary btn-editar">Editar</button>
-          <button class="btn btn-small btn-danger btn-eliminar">Eliminar</button>
-        </div>
-      `;
+listaTareas.addEventListener("click", (item) => {
+  const element = item.target;
+  const clase = element.getAttribute("class");
 
-  // Event listeners para la tarea
-  const checkbox = div.querySelector(".checkbox");
-  const btnEditar = div.querySelector(".btn-editar");
-  const btnEliminar = div.querySelector(".btn-eliminar");
+  if (clase.includes("checkbox")) {
+    const id = element.parentElement.getAttribute("data-id");
+    completarTarea(element, id);
+  }
+
+  if (clase.includes("btn-editar")) {
+    const id = element.parentElement.parentElement.getAttribute("data-id");
+    editarTarea(element, id);
+  }
+
+  if (clase.includes("btn-eliminar")) {
+    const id = element.parentElement.parentElement.getAttribute("data-id");
+    eliminarTarea(element, id);
+  }
+});
+
+function completarTarea(element, id) {
+  const tarea = tareas.find((item) => item.id === +id);
+  const div = element.parentElement;
+
+  tarea.completada = element.checked;
+  div.classList.toggle("completed", tarea.completada);
+  guardarTareas();
+  actualizarEstadisticas();
+  filtrarTareas();
+}
+
+function editarTarea(element, id) {
+  const tarea = tareas.find((item) => item.id === +id);
+  const div = element.parentElement.parentElement;
   const editor = div.querySelector(".editor");
+  const btnEditar = div.querySelector(".btn-editar");
 
-  checkbox.addEventListener("change", () => {
-    tarea.completada = checkbox.checked;
-    div.classList.toggle("completed", tarea.completada);
-    guardarTareas();
-    actualizarEstadisticas();
-    filtrarTareas();
-  });
+  if (div.classList.contains("editando")) {
+    // Guardar cambios
+    const nuevoTexto = editor.value.trim();
 
-  btnEditar.addEventListener("click", () => {
-    if (div.classList.contains("editando")) {
-      // Guardar cambios
-      const nuevoTexto = editor.value.trim();
-      if (nuevoTexto) {
-        tarea.texto = nuevoTexto;
-        div.querySelector(".texto-tarea").textContent = nuevoTexto;
-        guardarTareas();
-      }
-      div.classList.remove("editando");
-      btnEditar.textContent = "Editar";
-    } else {
-      // Entrar en modo edición
-      div.classList.add("editando");
-      editor.focus();
-      editor.select();
-      btnEditar.textContent = "Guardar";
+    if (nuevoTexto) {
+      tarea.texto = nuevoTexto;
+      div.querySelector(".texto-tarea").textContent = nuevoTexto;
+      guardarTareas();
     }
-  });
+    div.classList.remove("editando");
+    btnEditar.textContent = "Editar";
+  } else {
+    // Entrar en modo edición
+    div.classList.add("editando");
+    editor.focus();
+    editor.select();
+    btnEditar.textContent = "Guardar";
+  }
 
-  btnEliminar.addEventListener("click", () => {
-    if (confirm("¿Estás seguro de que quieres eliminar esta tarea?")) {
-      div.classList.add("removing");
-      setTimeout(() => {
-        tareas = tareas.filter((t) => t.id !== tarea.id);
-        div.remove();
-        guardarTareas();
-        actualizarEstadisticas();
-        mostrarEmptyState();
-      }, 300);
-    }
-  });
+  guardarConEnter(editor, btnEditar, div, tarea);
+}
 
-  // Guardar al presionar Enter en el editor
+function eliminarTarea(element, id) {
+  const tarea = tareas.find((item) => item.id === +id);
+  const div = element.parentElement.parentElement;
+
+  if (confirm("¿Estás seguro de que quieres eliminar esta tarea?")) {
+    div.classList.add("removing");
+    setTimeout(() => {
+      tareas = tareas.filter((t) => t.id !== tarea.id);
+      div.remove();
+      guardarTareas();
+      actualizarEstadisticas();
+      mostrarEmptyState();
+    }, 300);
+  }
+}
+
+// Guardar al presionar Enter en el editor
+function guardarConEnter(editor, btnEditar, div, tarea) {
   editor.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
       btnEditar.click();
@@ -128,8 +145,6 @@ function crearElementoTarea(tarea) {
       btnEditar.textContent = "Editar";
     }
   });
-
-  return div;
 }
 
 function mostrarTareas() {
@@ -207,8 +222,6 @@ btnAgregar.addEventListener("click", (e) => {
       }
       listaTareas.appendChild(elementoTarea);
     }
-  } else {
-    alert("Error: debes ingresar una tarea y elegir una categoria");
   }
 });
 
