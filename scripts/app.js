@@ -19,6 +19,7 @@ const stats = {
 
 let tareas = JSON.parse(localStorage.getItem("tareas")) || [];
 let filtroActual = "todas";
+let tareaArrastrada = null;
 
 // Carga lista de categorias dinamicamente
 listaCategorias.forEach((cat) => {
@@ -53,9 +54,12 @@ function crearElementoTarea(tarea) {
   );
   div.className = `tarea ${tarea.completada ? "completed" : ""}`;
   div.dataset.id = tarea.id;
+  div.draggable = true;
 
   const { color } = listaCategorias[indexCategoria];
   div.innerHTML = crearTareaTemplate(tarea, color);
+
+  reubicarTareas(div);
   return div;
 }
 
@@ -145,6 +149,46 @@ function guardarConEnter(editor, btnEditar, div, tarea) {
       btnEditar.textContent = "Editar";
     }
   });
+}
+
+function reubicarTareas(div) {
+  div.addEventListener("dragstart", () => {
+    tareaArrastrada = div;
+    div.classList.add("dragging");
+  });
+
+  div.addEventListener("dragend", () => {
+    tareaArrastrada = null;
+    div.classList.remove("dragging");
+  });
+
+  div.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    const dragging = document.querySelector(".dragging");
+    if (dragging && dragging !== div) {
+      const bounding = div.getBoundingClientRect();
+      const offset = e.clientY - bounding.top;
+      if (offset > bounding.height / 2) {
+        div.after(dragging);
+      } else {
+        div.before(dragging);
+      }
+    }
+  });
+
+  div.addEventListener("drop", () => {
+    actualizarOrden();
+  });
+}
+
+function actualizarOrden() {
+  const elementos = [...listaTareas.querySelectorAll(".tarea")];
+
+  tareas = elementos.map((el) => {
+    return tareas.find((t) => t.id == el.dataset.id);
+  });
+
+  guardarTareas();
 }
 
 function mostrarTareas() {
